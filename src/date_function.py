@@ -9,6 +9,6 @@ def dates(d):
         start = start + dur
         dates.append(str(start.year) + '-' + str(start.month) + '-' + str(start.day))
     
-    return {dates,d}
+    return dates,d
 
 

@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 def render_email_body(**kwargs):
     """Render HTML for email using a template."""
     env = Environment(
-        loader=FileSystemLoader("templates"),
+        loader=FileSystemLoader("template"),
         autoescape=select_autoescape(["html"]),
     )
     template = env.get_template("email-template.html")
@@ -28,7 +28,7 @@ async def send_email(name, to, context):
     message = MIMEMultipart()
     message["To"] = f"{name} <{to}>"
     message["From"] = fromaddr
-    message["Subject"] = "Currency Conversion"
+    message["Subject"] = "Stock Request Processed"
 
     message.attach(MIMEText(render_email_body(**context), "html"))
 

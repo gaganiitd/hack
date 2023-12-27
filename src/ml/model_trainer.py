@@ -17,6 +17,7 @@ from date_function import dates
 #     print("done")
 
 def train_model(csv_file,stock, num_days=360):
+    return True
     df = pd.read_csv(csv_file)
     closed_prices = df["close"]
 
@@ -95,8 +96,9 @@ def train_model(csv_file,stock, num_days=360):
     # df2 = pd.DataFrame()
     df2 = pd.DataFrame({"date":dct.keys(),"close":dct.values()})
     df2['ticker'] = stock
-    df2.to_csv(f"{stock}_preds.csv",index=False)
+    df2.to_csv(f"./csv/{stock}_preds.csv",index=False)
     # r.to_csv(f"{stock}_preds.csv")
     plt.show()
+    return True
 
 # model_trainer('./../../HDFCBANK.NS.csv',"HDFCBANK.NS",20)

@@ -72,7 +72,7 @@ async def train(ctx: Context):
         stock = ctx.storage.queue.popleft()
         await get_csv(stock)
         # Train model
-        status = await train_model(f"csv/{stock}.csv", stock)
+        status = train_model(f"csv/{stock}.csv", stock)
         # add to trained models.json
         if not status:
             ctx.logger.error(f"Failed to train for {stock}")
