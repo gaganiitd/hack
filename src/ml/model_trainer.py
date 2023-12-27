@@ -17,7 +17,6 @@ from date_function import dates
 #     print("done")
 
 def train_model(csv_file,stock, num_days=360):
-    return True
     df = pd.read_csv(csv_file)
     closed_prices = df["close"]
 
