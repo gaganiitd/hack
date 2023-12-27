@@ -30,7 +30,7 @@ async def get_csv(stock):
     )
 
     df = df.loc[:, ["date", "close", "ticker"]]
-    df.to_csv(f"csv/{stock}.csv")
+    df.to_csv(f"csv/{stock}.csv", index=False)
 
 
 def get_train_queue():
