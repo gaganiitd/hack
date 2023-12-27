@@ -6,7 +6,7 @@ __pycache__/
 .vscode
 hack_env/
 # *.json
-*.csv
+# *.csv
 # C extensions
 *.so
 
