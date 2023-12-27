@@ -1,80 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Stock Request Processed</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f6f6f6;
-                margin: 0;
-                padding: 0;
-            }
 
-            .container {
-                max-width: 600px;
-                margin: 20px auto;
-                background-color: #ffffff;
-                padding: 30px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Request Processed</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
+            padding: 0;
+        }
 
-            h1 {
-                color: #2c3e50;
-                text-align: center;
-            }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
-            p {
-                color: #444444;
-                line-height: 1.6;
-                margin-bottom: 15px;
-            }
+        h1 {
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-            a {
-                color: #3498db;
-                text-decoration: none;
-            }
+        p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
 
-            a:hover {
-                text-decoration: underline;
-            }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-            .button {
-                display: inline-block;
-                padding: 10px 20px;
-                background-color: #3498db;
-                color: #ffffff;
-                text-decoration: none;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
+        a:hover {
+            text-decoration: underline;
+        }
 
-            .button:hover {
-                background-color: #2980b9;
-            }
+        .button-container {
+            text-align: center;
+        }
 
-            .footer {
-                margin-top: 30px;
-                color: #777777;
-                font-size: 14px;
-                text-align: center;
-            }
-            </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Stock Request Processed</h1>
-            <p>Dear {User},</p>
-            <p>Your request to know about {stock name} has been processed. You can now access all the information by clicking on the following link:</p>
-            <p><a href="[Link to Stock Information]">Stock Information</a></p>
-            <p>If you have any further questions or need assistance, feel free to contact us.</p>
-            <p>Thank you for using our services!</p>
-            <p>
-                Best regards,<br />
-                Your Company Name
-            </p>
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #777777;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .background-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stock Request Processed</h1>
+        <p>Dear {User},</p>
+        <p>Your request to know about {stock name} has been processed. You can now access all the information by clicking on the following link:</p>
+        <div class="button-container">
+            <p><a href="[Link to Stock Information]" class="button">Stock Information</a></p>
         </div>
-    </body>
+        <p>If you have any further questions or need assistance, feel free to contact us.</p>
+        <p>Thank you for using our services!</p>
+        <p class="footer">
+            Best regards,<br />
+            Your Company Name
+        </p>
+    </div>
+</body>
+
 </html>
