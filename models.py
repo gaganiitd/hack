@@ -5,12 +5,10 @@ from sklearn.preprocessing import MinMaxScaler
 
 df = pd.DataFrame(pd.read_csv('^NSEI.csv'))
 df.fillna(method='ffill', inplace=True)
-
 scaler = MinMaxScaler(feature_range=(-1, 1))
 df['Close'] = scaler.fit_transform(df['Close'].values.reshape(-1,1))
 
 
-df = df['Date', 'Close']
 def load_data(stock, look_back):
     data_raw = stock.values # convert to numpy array
     data = []
