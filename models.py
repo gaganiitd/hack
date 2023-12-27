@@ -1,40 +1,96 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+
+import torch
+import torch.nn as nn
 
 
-df = pd.DataFrame(pd.read_csv('^NSEI.csv'))
-df.fillna(method='ffill', inplace=True)
-scaler = MinMaxScaler(feature_range=(-1, 1))
-df['Close'] = scaler.fit_transform(df['Close'].values.reshape(-1,1))
+def training(csv_file, stock_name):
+    df = pd.read_csv("NIFTY.csv")
+    closed_prices = df["Close"]
 
+    seq_len = 180
 
-def load_data(stock, look_back):
-    data_raw = stock.values # convert to numpy array
-    data = []
-    
-    # create all possible sequences of length look_back
-    for index in range(len(data_raw) - look_back): 
-        data.append(data_raw[index: index + look_back])
-    
-    data = np.array(data);
-    test_set_size = int(np.round(0.2*data.shape[0]));
-    train_set_size = data.shape[0] - (test_set_size);
-    
-    x_train = data[:train_set_size,:-1,:]
-    y_train = data[:train_set_size,-1,:]
-    
-    x_test = data[train_set_size:,:-1]
-    y_test = data[train_set_size:,-1,:]
-    
-    return [x_train, y_train, x_test, y_test]
+    mm = MinMaxScaler()
+    scaled_price = mm.fit_transform(np.array(closed_prices)[... , None]).squeeze()
 
+    X = []
+    y = []
 
+    for i in range(len(scaled_price) - seq_len):
+        X.append(scaled_price[i : i + seq_len])
+        y.append(scaled_price[i + seq_len])
 
-look_back = 60 # choose sequence length
-x_train, y_train, x_test, y_test = load_data(df, look_back)
-print('x_train.shape = ',x_train.shape)
-print('y_train.shape = ',y_train.shape)
-print('x_test.shape = ',x_test.shape)
-print('y_test.shape = ',y_test.shape)
-print(df.head())
+    X = np.array(X)[... , None]
+    y = np.array(y)[... , None]
+
+    train_x = torch.from_numpy(X[:int(0.8 * X.shape[0])]).float()
+    train_y = torch.from_numpy(y[:int(0.8 * X.shape[0])]).float()
+    test_x = torch.from_numpy(X[int(0.8 * X.shape[0]):]).float()
+    test_y = torch.from_numpy(y[int(0.8 * X.shape[0]):]).float()
+
+    class Model(nn.Module):
+        def __init__(self , input_size , hidden_size):
+            super().__init__()
+            self.lstm = nn.LSTM(input_size , hidden_size , batch_first = True)
+            self.fc = nn.Linear(hidden_size , 1)
+        def forward(self , x):
+            output , (hidden , cell) = self.lstm(x)
+            return self.fc(hidden[-1 , :])
+    model = Model(1 , 64)
+
+    optimizer = torch.optim.Adam(model.parameters() , lr = 0.001)
+    loss_fn = nn.MSELoss()
+
+    num_epochs = 100
+
+    for epoch in range(num_epochs):
+        output = model(train_x)
+        loss = loss_fn(output , train_y)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 10 == 0 and epoch != 0:
+            print(epoch , "epoch loss" , loss.detach().numpy())
+
+    model.eval()
+    torch.save(model, '/kaggle/working/{0}.pt'.format(stock_name))
+
+def predictor(csv_file, model_path):
+    model = torch.load(model_path)
+    df = pd.read_csv(csv_file)
+    closed_prices = df["Close"]
+
+    seq_len = 180
+
+    mm = MinMaxScaler()
+    scaled_price = mm.fit_transform(np.array(closed_prices)[... , None]).squeeze()
+
+    X = []
+    y = []
+
+    for i in range(len(scaled_price) - seq_len):
+        X.append(scaled_price[i : i + seq_len])
+        y.append(scaled_price[i + seq_len])
+
+    X = np.array(X)[... , None]
+    y = np.array(y)[... , None]
+    test_x = torch.from_numpy(X[int(0.8 * X.shape[0]):]).float()
+    days = 30
+
+    future_pred = test_x[-1]
+    print(future_pred.shape)
+    lst = []
+
+    for i in range(days):
+        with torch.no_grad():
+            output = model(future_pred.unsqueeze(0))
+            lst.append(mm.inverse_transform(output.numpy()))
+    #         print(future_pred)
+            future_pred = torch.cat((future_pred,output),0)
+            future_pred = future_pred[1:]
+    print(lst)
